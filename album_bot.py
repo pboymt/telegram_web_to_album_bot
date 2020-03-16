@@ -26,7 +26,6 @@ def getUrl(msg):
 
 @log_on_fail(debug_group)
 def toAlbum(update, context):
-	print(1)
 	msg = update.effective_message
 	url = getUrl(msg)
 	imgs, cap = web_2_album.get(url)
@@ -42,7 +41,7 @@ def toAlbum(update, context):
 		    img.save('tmp_image/%s.jpg' % index)
 	group = [InputMediaPhoto(open(imgs[0], 'rb'), caption=cap, parse_mode='Markdown')] + \
 		[InputMediaPhoto(open(x, 'rb')) for x in imgs[1:]]
-	msg.reply_media_group(group, timeout = 20*60)
+	tele.bot.send_media_group(msg.chat_id, group, timeout = 20*60)
 
 tele.dispatcher.add_handler(MessageHandler(Filters.text & Filters.entity('url'), toAlbum))
 
