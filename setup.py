@@ -1,7 +1,7 @@
 import os
 import sys
 
-EXE_FILE = 'pic_bot'
+EXE_FILE = 'album_bot'
 
 def kill():
 	os.system("ps aux | grep ython | grep %s | awk '{print $2}' | xargs kill -9" % EXE_FILE)

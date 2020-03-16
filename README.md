@@ -1,5 +1,5 @@
-# telegram long pic cut bot
+# telegram url to album
 
-@long_pic_bot
+@web2album_bot
 
 Will add more details if more than 10 people star the repo.
