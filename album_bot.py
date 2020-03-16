@@ -39,6 +39,7 @@ def getImageAndCap(url, msg):
 				return images, cap
 		except Exception as e:
 			print(e)
+	print(here)
 	return [], ''
 
 @log_on_fail(debug_group)
