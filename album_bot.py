@@ -29,6 +29,7 @@ def getImageAndCap(url, msg):
 	if 'force_web' in msg.text:
 		return web_2_album.get(url)
 	if 'force_weibo' in msg.text:
+		print(1)
 		return weibo_2_album.get(url)
 
 	for method in [web_2_album, weibo_2_album]:
@@ -45,6 +46,7 @@ def toAlbum(update, context):
 	msg = update.effective_message
 	url = getUrl(msg)
 	imgs, cap = getImageAndCap(url, msg)
+	print(imgs, cap)
 
 	if not imgs:
 		if msg.chat_id > 0:
