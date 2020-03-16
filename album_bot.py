@@ -28,7 +28,11 @@ def getUrl(msg):
 def toAlbum(update, context):
 	msg = update.effective_message
 	url = getUrl(msg)
-	imgs, cap = web_2_album.get(url)
+	imgs, cap = [], ''
+	try:
+		imgs, cap = web_2_album.get(url)
+	except:
+		pass
 	if not imgs:
 		if msg.chat_id > 0:
 			msg.reply_text('can not find images in your url')
