@@ -27,7 +27,7 @@ def getUrl(msg):
 @log_on_fail(debug_group)
 def toAlbum(update, context):
 	print(1)
-	msg = update.message
+	msg = update.effective_message
 	url = getUrl(msg)
 	imgs, cap = web_2_album.get(url)
 	if not imgs:
