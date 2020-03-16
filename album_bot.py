@@ -32,6 +32,7 @@ def getImageAndCap(url, msg):
 		return weibo_2_album.get(url)
 
 	for method in [web_2_album, weibo_2_album]:
+		print(method.__name__)
 		try:
 			imgs, cap = method.get(url)	
 			if images:
