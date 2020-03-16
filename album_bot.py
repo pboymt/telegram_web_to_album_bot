@@ -32,14 +32,12 @@ def getImageAndCap(url, msg):
 		return weibo_2_album.get(url)
 
 	for method in [web_2_album, weibo_2_album]:
-		print(method.__name__)
 		try:
 			imgs, cap = method.get(url)	
-			if images:
-				return images, cap
-		except Exception as e:
-			print(e)
-	print(here)
+			if imgs:
+				return imgs, cap
+		except:
+			pass
 	return [], ''
 
 @log_on_fail(debug_group)
@@ -47,7 +45,6 @@ def toAlbum(update, context):
 	msg = update.effective_message
 	url = getUrl(msg)
 	imgs, cap = getImageAndCap(url, msg)
-	print(imgs, cap)
 
 	if not imgs:
 		if msg.chat_id > 0:
