@@ -25,24 +25,26 @@ def getUrl(msg):
 				url = "https://" + url
 			return url
 
-def getImageAndCap(url):
-	imgs, cap = [], ''
-	try:
-		imgs, cap = web_2_album.get(url)
-	except:
-		pass
-	if not imgs:
+def getImageAndCap(url, msg):
+	if 'force_web' in msg.text:
+		return web_2_album.get(url)
+	if 'force_weibo' in msg.text:
+		return weibo_2_album.get(url)
+
+	for method in [web_2_album, weibo_2_album]:
 		try:
-			imgs, cap = weibo_2_album.get(url)
+			imgs, cap = method.get(url)	
+			if images:
+				return images, cap
 		except:
 			pass
-	return imgs, cap
+	return [], ''
 
 @log_on_fail(debug_group)
 def toAlbum(update, context):
 	msg = update.effective_message
 	url = getUrl(msg)
-	imgs, cap = getImageAndCap(url)
+	imgs, cap = getImageAndCap(url, msg)
 
 	if not imgs:
 		if msg.chat_id > 0:
