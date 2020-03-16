@@ -9,6 +9,7 @@ from telegram import InputMediaPhoto
 import os
 import web_2_album
 from PIL import Image
+import weibo_2_album
 
 with open('CREDENTIALS') as f:
     CREDENTIALS = yaml.load(f, Loader=yaml.FullLoader)
@@ -24,15 +25,24 @@ def getUrl(msg):
 				url = "https://" + url
 			return url
 
-@log_on_fail(debug_group)
-def toAlbum(update, context):
-	msg = update.effective_message
-	url = getUrl(msg)
+def getImageAndCap(url):
 	imgs, cap = [], ''
 	try:
 		imgs, cap = web_2_album.get(url)
 	except:
 		pass
+	if not imgs:
+		# add try
+		imgs, cap = weibo_2_album.get(url)
+	return imgs, cap
+
+@log_on_fail(debug_group)
+def toAlbum(update, context):
+	msg = update.effective_message
+	url = getUrl(msg)
+	imgs, cap = getImageAndCap(url)
+
+
 	if not imgs:
 		if msg.chat_id > 0:
 			msg.reply_text('can not find images in your url')
