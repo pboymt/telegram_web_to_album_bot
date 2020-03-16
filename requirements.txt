@@ -1,5 +1,5 @@
 python-telegram-bot
-web_2_album>=0.0.4
+web_2_album>=0.0.5
 pyyaml
 telegram_util>=0.0.37
 weibo_2_album>=0.0.2
