@@ -26,11 +26,9 @@ def getUrl(msg):
 			return url
 
 def getImageAndCap(url, msg):
-	print(1)
 	if 'force_web' in msg.text:
 		return web_2_album.get(url)
 	if 'force_weibo' in msg.text:
-		print(2)
 		return weibo_2_album.get(url)
 
 	for method in [web_2_album, weibo_2_album]:
