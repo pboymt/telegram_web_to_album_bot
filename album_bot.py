@@ -32,8 +32,10 @@ def getImageAndCap(url):
 	except:
 		pass
 	if not imgs:
-		# add try
-		imgs, cap = weibo_2_album.get(url)
+		try:
+			imgs, cap = weibo_2_album.get(url)
+		except:
+			pass
 	return imgs, cap
 
 @log_on_fail(debug_group)
@@ -42,17 +44,18 @@ def toAlbum(update, context):
 	url = getUrl(msg)
 	imgs, cap = getImageAndCap(url)
 
-
 	if not imgs:
 		if msg.chat_id > 0:
 			msg.reply_text('can not find images in your url')
 		return
+
 	if 'bot_rotate' in msg.text:
 		for index, img_path in enumerate(imgs):
 		    img = Image.open(img_path)
 		    img = img.rotate(180)
 		    img.save(img_path)
 		    img.save('tmp_image/%s.jpg' % index)
+		    
 	group = [InputMediaPhoto(open(imgs[0], 'rb'), caption=cap, parse_mode='Markdown')] + \
 		[InputMediaPhoto(open(x, 'rb')) for x in imgs[1:]]
 	tele.bot.send_media_group(msg.chat_id, group, timeout = 20*60)
