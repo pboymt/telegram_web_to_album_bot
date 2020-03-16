@@ -1,0 +1,4 @@
+python-telegram-bot
+pic_cut>=0.0.2
+pyyaml
+telegram_util>=0.0.31
