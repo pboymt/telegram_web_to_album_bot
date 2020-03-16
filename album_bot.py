@@ -29,7 +29,6 @@ def getImageAndCap(url, msg):
 	if 'force_web' in msg.text:
 		return web_2_album.get(url)
 	if 'force_weibo' in msg.text:
-		print(1)
 		return weibo_2_album.get(url)
 
 	for method in [web_2_album, weibo_2_album]:
@@ -37,8 +36,8 @@ def getImageAndCap(url, msg):
 			imgs, cap = method.get(url)	
 			if images:
 				return images, cap
-		except:
-			pass
+		except Exception as e:
+			print(e)
 	return [], ''
 
 @log_on_fail(debug_group)
