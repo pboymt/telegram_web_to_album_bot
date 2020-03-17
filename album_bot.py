@@ -27,18 +27,19 @@ def getUrl(msg):
 
 def getImageAndCap(url, msg):
 	if 'force_web' in msg.text:
-		return web_2_album.get(url)
+		return web_2_album.get(url, ok_no_image=True)
 	if 'force_weibo' in msg.text:
 		return weibo_2_album.get(url)
 
+	candidate = [], ''
 	for method in [web_2_album, weibo_2_album]:
 		try:
-			imgs, cap = method.get(url)	
-			if imgs:
-				return imgs, cap
+			candidate = web_2_album.compare(candidate, method.get(url))
+			if candidate[0]:
+				return candidate
 		except:
 			pass
-	return [], ''
+	return candidate
 
 @log_on_fail(debug_group)
 def toAlbum(update, context):
@@ -46,21 +47,19 @@ def toAlbum(update, context):
 	url = getUrl(msg)
 	imgs, cap = getImageAndCap(url, msg)
 
-	if not imgs:
-		if msg.chat_id > 0:
-			msg.reply_text('can not find images in your url')
-		return
-
 	if 'bot_rotate' in msg.text:
 		for index, img_path in enumerate(imgs):
 			img = Image.open(img_path)
 			img = img.rotate(180)
 			img.save(img_path)
 			img.save('tmp_image/%s.jpg' % index)
-			
-	group = [InputMediaPhoto(open(imgs[0], 'rb'), caption=cap, parse_mode='Markdown')] + \
-		[InputMediaPhoto(open(x, 'rb')) for x in imgs[1:]]
-	tele.bot.send_media_group(msg.chat_id, group, timeout = 20*60)
+	
+	if imgs:			
+		group = [InputMediaPhoto(open(imgs[0], 'rb'), caption=cap, parse_mode='Markdown')] + \
+			[InputMediaPhoto(open(x, 'rb')) for x in imgs[1:]]
+		tele.bot.send_media_group(msg.chat_id, group, timeout = 20*60)
+	else:
+		tele.bot.send_message(msg.chat_id, cap, parse_mode='Markdown')
 
 def test(update, context):
 	print(update.message.text_markdown)
