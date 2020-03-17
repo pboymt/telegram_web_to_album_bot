@@ -35,6 +35,7 @@ def getImageAndCap(url, msg):
 	for method in [web_2_album, weibo_2_album]:
 		try:
 			candidate = web_2_album.compare(candidate, method.get(url))
+			print(candidate)
 			if candidate[0]:
 				return candidate
 		except:
@@ -58,7 +59,7 @@ def toAlbum(update, context):
 		group = [InputMediaPhoto(open(imgs[0], 'rb'), caption=cap, parse_mode='Markdown')] + \
 			[InputMediaPhoto(open(x, 'rb')) for x in imgs[1:]]
 		tele.bot.send_media_group(msg.chat_id, group, timeout = 20*60)
-	else:
+	elif cap:
 		tele.bot.send_message(msg.chat_id, cap, parse_mode='Markdown')
 
 def test(update, context):
