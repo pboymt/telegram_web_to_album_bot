@@ -12,7 +12,7 @@ from PIL import Image
 import weibo_2_album
 
 with open('CREDENTIALS') as f:
-    CREDENTIALS = yaml.load(f, Loader=yaml.FullLoader)
+	CREDENTIALS = yaml.load(f, Loader=yaml.FullLoader)
 tele = Updater(CREDENTIALS['bot_token'], use_context=True)
 
 debug_group = tele.bot.get_chat(-1001198682178)
@@ -53,16 +53,20 @@ def toAlbum(update, context):
 
 	if 'bot_rotate' in msg.text:
 		for index, img_path in enumerate(imgs):
-		    img = Image.open(img_path)
-		    img = img.rotate(180)
-		    img.save(img_path)
-		    img.save('tmp_image/%s.jpg' % index)
-		    
+			img = Image.open(img_path)
+			img = img.rotate(180)
+			img.save(img_path)
+			img.save('tmp_image/%s.jpg' % index)
+			
 	group = [InputMediaPhoto(open(imgs[0], 'rb'), caption=cap, parse_mode='Markdown')] + \
 		[InputMediaPhoto(open(x, 'rb')) for x in imgs[1:]]
 	tele.bot.send_media_group(msg.chat_id, group, timeout = 20*60)
 
+def test(update, context):
+	print(update.message.text_markdown)
+
 tele.dispatcher.add_handler(MessageHandler(Filters.text & Filters.entity('url'), toAlbum))
+tele.dispatcher.add_handler(MessageHandler(Filters.private, test))
 
 tele.start_polling()
 tele.idle()
