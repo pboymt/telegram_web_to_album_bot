@@ -34,12 +34,12 @@ def getImageAndCap(url, msg):
 	candidate = [], ''
 	for method in [web_2_album, weibo_2_album]:
 		try:
-			candidate = web_2_album.compare(candidate, method.get(url))
-			print(candidate)
-			if candidate[0]:
-				return candidate
+			new_candidate = method.get(url)
 		except:
-			pass
+			continue
+		candidate = web_2_album.compare(candidate, new_candidate)
+		if candidate[0]:
+			return candidate
 	return candidate
 
 @log_on_fail(debug_group)
