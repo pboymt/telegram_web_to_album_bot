@@ -10,6 +10,7 @@ import os
 import web_2_album
 from PIL import Image
 import weibo_2_album
+import twitter_2_album
 
 with open('CREDENTIALS') as f:
 	CREDENTIALS = yaml.load(f, Loader=yaml.FullLoader)
@@ -26,13 +27,14 @@ def getUrl(msg):
 			return url
 
 def getImageAndCap(url, msg):
+	# TODO: optimization based on url
 	if 'force_web' in msg.text:
 		return web_2_album.get(url, ok_no_image=True)
 	if 'force_weibo' in msg.text:
 		return weibo_2_album.get(url)
 
 	candidate = [], ''
-	for method in [web_2_album, weibo_2_album]:
+	for method in [web_2_album, weibo_2_album, twitter_2_album]:
 		try:
 			new_candidate = method.get(url)
 		except:
