@@ -29,7 +29,7 @@ def getUrl(msg):
 def getImageAndCap(url, msg):
 	# TODO: optimization based on url
 	if 'force_web' in msg.text:
-		return web_2_album.get(url, ok_no_image=True)
+		return web_2_album.get(url)
 	if 'force_weibo' in msg.text:
 		return weibo_2_album.get(url)
 
