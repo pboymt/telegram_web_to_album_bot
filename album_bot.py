@@ -46,7 +46,13 @@ def toAlbum(update, context):
 	result = getResult(url, msg)
 	if not result:
 		return
-	rotate = 'bot_rotate' in msg.text
+	rotate = 0
+	for x in msg.text.split():
+		if 'bot_rotate' in x:
+			try:
+				rotate = int(x.split('_')[-1])
+			except:
+				rotate = 180
 	album_sender.send(msg.chat, url, result, rotate = rotate)
 
 def test(update, context):
