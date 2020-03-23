@@ -8,6 +8,7 @@ from telegram_util import log_on_fail
 import web_2_album
 import weibo_2_album
 import twitter_2_album
+import album_sender
 
 with open('CREDENTIALS') as f:
 	CREDENTIALS = yaml.load(f, Loader=yaml.FullLoader)
@@ -45,7 +46,7 @@ def toAlbum(update, context):
 	result = getResult(url, msg)
 	if not result:
 		return
-	rotete = 'bot_rotate' in msg.text
+	rotate = 'bot_rotate' in msg.text
 	album_sender.send(msg.chat, url, result, rotate = rotate)
 
 def test(update, context):
