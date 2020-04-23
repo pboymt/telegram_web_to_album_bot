@@ -31,7 +31,7 @@ def setup(arg = ''):
 		os.system(RUN_COMMAND[6:-2])
 	else:
 		os.system(RUN_COMMAND)
-		if arg != 'notail':
+		if 'notail' not in sys.argv:
 			os.system('touch nohup.out && tail -F nohup.out')
 
 
