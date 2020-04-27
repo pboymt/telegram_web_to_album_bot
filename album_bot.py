@@ -24,11 +24,11 @@ def getUrl(msg):
 				url = "https://" + url
 			return url
 
-def getResult(url, msg):
+def getResult(url, text):
 	# TODO: optimization based on url
-	if 'force_web' in msg.text:
+	if 'force_web' in text:
 		return web_2_album.get(url)
-	if 'force_weibo' in msg.text:
+	if 'force_weibo' in text:
 		return weibo_2_album.get(url)
 
 	ranks = [weibo_2_album, twitter_2_album, web_2_album]
@@ -46,7 +46,7 @@ def getResult(url, msg):
 def toAlbum(update, context):
 	msg = update.effective_message
 	url = getUrl(msg)
-	result = getResult(url, msg)
+	result = getResult(url, msg.text)
 	if not result:
 		return
 	rotate = 0
@@ -61,8 +61,9 @@ def toAlbum(update, context):
 def test(update, context):
 	print(update.message.text_markdown)
 
-tele.dispatcher.add_handler(MessageHandler(Filters.text & Filters.entity('url'), toAlbum))
-tele.dispatcher.add_handler(MessageHandler(Filters.private, test))
+if __name__ == "__main__":
+	tele.dispatcher.add_handler(MessageHandler(Filters.text & Filters.entity('url'), toAlbum))
+	tele.dispatcher.add_handler(MessageHandler(Filters.private, test))
 
-tele.start_polling()
-tele.idle()
+	tele.start_polling()
+	tele.idle()
