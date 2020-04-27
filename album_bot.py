@@ -58,12 +58,8 @@ def toAlbum(update, context):
 				rotate = 180
 	album_sender.send(msg.chat, url, result, rotate = rotate)
 
-def test(update, context):
-	print(update.message.text_markdown)
-
 if __name__ == "__main__":
 	tele.dispatcher.add_handler(MessageHandler(Filters.text & Filters.entity('url'), toAlbum))
-	tele.dispatcher.add_handler(MessageHandler(Filters.private, test))
 
 	tele.start_polling()
 	tele.idle()
