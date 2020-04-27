@@ -31,7 +31,10 @@ def getResult(url, msg):
 	if 'force_weibo' in msg.text:
 		return weibo_2_album.get(url)
 
-	for method in [weibo_2_album, twitter_2_album, web_2_album]:
+	ranks = [weibo_2_album, twitter_2_album, web_2_album]
+	if '.douban.' in url:
+		ranks = [web_2_album]
+	for method in ranks:
 		try:
 			candidate = method.get(url)
 		except:
