@@ -56,7 +56,9 @@ def toAlbum(update, context):
 				rotate = int(x.split('_')[-1])
 			except:
 				rotate = 180
+	r = msg.reply_text('sending')
 	album_sender.send(msg.chat, url, result, rotate = rotate)
+	r.delete()
 
 if __name__ == "__main__":
 	tele.dispatcher.add_handler(MessageHandler(Filters.text & Filters.entity('url'), toAlbum))
