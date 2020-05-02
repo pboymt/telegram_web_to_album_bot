@@ -37,7 +37,7 @@ def getResult(url, text):
 	for method in ranks:
 		try:
 			candidate = method.get(url)
-			if method == weibo_2_album: # add log, so that 
+			if not candidate.empty() and method == weibo_2_album: # add log, so that 
 				# only specific domain will use weibo result
 				print('potential weibo link', url)
 		except:
