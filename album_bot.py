@@ -60,7 +60,10 @@ def toAlbum(update, context):
 			except:
 				rotate = 180
 	r = msg.reply_text('sending')
-	album_sender.send(msg.chat, url, result, rotate = rotate)
+	try:
+		album_sender.send(msg.chat, url, result, rotate = rotate)
+	except Exception as e:
+		debug_group.send_message('%s failed with exception: %s' % (url, str(e)))
 	r.delete()
 
 if __name__ == "__main__":
