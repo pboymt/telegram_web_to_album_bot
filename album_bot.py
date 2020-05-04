@@ -32,15 +32,14 @@ def getResult(url, text):
 	if 'force_weibo' in text:
 		return weibo_2_album.get(url)
 
-	ranks = [weibo_2_album, twitter_2_album, web_2_album]
+	ranks = [twitter_2_album, web_2_album]
 	if '.douban.' in url:
 		ranks = [web_2_album]
+	if 'weibo' in url:
+		ranks = [weibo_2_album] + ranks
 	for method in ranks:
 		try:
 			candidate = method.get(url)
-			if not candidate.empty() and method == weibo_2_album: # add log, so that 
-				# only specific domain will use weibo result
-				print('potential weibo link', url)
 		except:
 			continue
 		if not candidate.empty():
