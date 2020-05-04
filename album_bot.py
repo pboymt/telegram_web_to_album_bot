@@ -9,6 +9,7 @@ import web_2_album
 import weibo_2_album
 import twitter_2_album
 import album_sender
+from datetime import datetime
 
 with open('CREDENTIALS') as f:
 	CREDENTIALS = yaml.load(f, Loader=yaml.FullLoader)
@@ -45,12 +46,19 @@ def getResult(url, text):
 		if not candidate.empty():
 			return candidate
 
+def log(*args):
+	text = ' '.join([str(x) for x in args])
+	with open('nohup.out', 'a') as f:
+		f.write('%d:%d %s\n' % (datetime.now().hour, datetime.now().minute, text))
+
 @log_on_fail(debug_group)
 def toAlbum(update, context):
 	msg = update.effective_message
 	url = getUrl(msg)
+	log('start', url)
 	result = getResult(url, msg.text)
 	if not result:
+		log('no result')
 		return
 	rotate = 0
 	for x in msg.text.split():
@@ -60,11 +68,14 @@ def toAlbum(update, context):
 			except:
 				rotate = 180
 	r = msg.reply_text('sending')
+	log('sending')
 	try:
 		album_sender.send(msg.chat, url, result, rotate = rotate)
 	except Exception as e:
 		debug_group.send_message('%s failed with exception: %s' % (url, str(e)))
+		log('exception')
 	r.delete()
+	log('finish')
 
 if __name__ == "__main__":
 	tele.dispatcher.add_handler(MessageHandler(Filters.text & Filters.entity('url'), toAlbum))
