@@ -53,6 +53,8 @@ def log(*args):
 @log_on_fail(debug_group)
 def toAlbum(update, context):
 	msg = update.effective_message
+	if '[source]' in msg.text_markdown and msg.chat_id < 0:
+		return
 	url = getUrl(msg)
 	log('start', url)
 	result = getResult(url, msg.text)
