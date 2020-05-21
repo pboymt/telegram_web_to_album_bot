@@ -4,7 +4,7 @@
 from telegram.ext import Updater, MessageHandler, Filters
 
 import yaml
-from telegram_util import log_on_fail
+from telegram_util import log_on_fail, matchKey
 import web_2_album
 import weibo_2_album
 import twitter_2_album
@@ -32,11 +32,11 @@ def getResult(url, text):
 	if 'force_weibo' in text:
 		return weibo_2_album.get(url)
 
-	ranks = [twitter_2_album, web_2_album]
-	if '.douban.' in url:
-		ranks = [web_2_album]
+	ranks = [web_2_album]
 	if 'weibo' in url:
 		ranks = [weibo_2_album] + ranks
+	if matchKey(url, ['twitter', 't.co']):
+		ranks = [twitter_2_album] + ranks
 	for method in ranks:
 		try:
 			candidate = method.get(url)
