@@ -55,6 +55,9 @@ def toAlbum(update, context):
 	msg = update.effective_message
 	if '[source]' in msg.text_markdown and msg.chat_id < 0:
 		return
+	if ('mp.weixin.qq.com' in msg.text_markdown and 
+			msg.chat.username == '@web_record'):
+		return
 	url = getUrl(msg)
 	log('start', url)
 	result = getResult(url, msg.text)
@@ -68,7 +71,7 @@ def toAlbum(update, context):
 				rotate = int(x.split('_')[-1])
 			except:
 				rotate = 180
-	r = msg.reply_text('sending')
+	r = tele.bot.send_message(msg.chat_id, 'sending')
 	log('sending')
 	try:
 		album_sender.send(msg.chat, url, result, rotate = rotate)
