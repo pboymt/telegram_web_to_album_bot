@@ -57,9 +57,8 @@ def toAlbum(update, context):
 	msg = update.effective_message
 	if '[source]' in msg.text_markdown and msg.chat_id < 0:
 		return
-	log(msg.chat.username)
 	if ('mp.weixin.qq.com' in msg.text_markdown and 
-			msg.chat.username == '@web_record'):
+			msg.chat.username == 'web_record'):
 		return
 	url = getUrl(msg)
 	log('start', url)
