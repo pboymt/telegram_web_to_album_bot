@@ -75,7 +75,8 @@ def toAlbum(update, context):
 	r = tele.bot.send_message(msg.chat_id, 'sending')
 	log('sending')
 	try:
-		album_sender.send(msg.chat, url, result, rotate = rotate)
+		album_sender.send_v2(msg.chat, result, rotate = rotate, 
+			send_all=True, time_sleep=5)
 	except Exception as e:
 		debug_group.send_message('%s failed with exception: %s' % (url, str(e)))
 		log('exception')
