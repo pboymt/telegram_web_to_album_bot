@@ -8,6 +8,7 @@ from telegram_util import log_on_fail, matchKey
 import web_2_album
 import weibo_2_album
 import twitter_2_album
+import post_2_album
 import album_sender
 from datetime import datetime
 
@@ -37,6 +38,8 @@ def getResult(url, text):
 		ranks = [weibo_2_album] + ranks
 	if matchKey(url, ['twitter', 't.co']):
 		ranks = [twitter_2_album] + ranks
+	if 't.me/' in url:
+		ranks = [post_2_album] + ranks
 	for method in ranks:
 		try:
 			candidate = method.get(url)
