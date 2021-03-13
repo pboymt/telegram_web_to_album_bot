@@ -66,7 +66,6 @@ def toAlbum(update, context):
 	log('start', url)
 	result = getResult(url, msg.text)
 	if not result:
-		log('no result')
 		return
 	rotate = 0
 	for x in msg.text.split():
@@ -75,15 +74,14 @@ def toAlbum(update, context):
 				rotate = int(x.split('_')[-1])
 			except:
 				rotate = 180
-	r = tele.bot.send_message(msg.chat_id, 'sending')
-	log('sending')
+	r = None
 	try:
+		r = tele.bot.send_message(msg.chat_id, 'sending')
 		album_sender.send_v2(msg.chat, result, rotate = rotate)
 	except Exception as e:
 		debug_group.send_message('%s failed with exception: %s' % (url, str(e)))
-		log('exception')
-	r.delete()
-	log('finish')
+	if r:
+		r.delete()
 
 if __name__ == "__main__":
 	tele.dispatcher.add_handler(MessageHandler(Filters.text & Filters.entity('url'), toAlbum))
