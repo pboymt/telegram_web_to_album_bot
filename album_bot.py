@@ -4,14 +4,12 @@
 from telegram.ext import Updater, MessageHandler, Filters
 
 import yaml
-from telegram_util import log_on_fail, matchKey
+from telegram_util import log_on_fail, matchKey, getDisplayChatHtml
 import web_2_album
 import weibo_2_album
 import twitter_2_album
-import post_2_album
 import album_sender
-from datetime import datetime
-from bs4 import beautifulSoup
+from bs4 import BeautifulSoup
 
 with open('CREDENTIALS') as f:
 	CREDENTIALS = yaml.load(f, Loader=yaml.FullLoader)
@@ -22,27 +20,21 @@ debug_group = tele.bot.get_chat(420074357)
 def getUrl(msg):
 	if matchKey(msg.caption_html_urled, ['source</a>']):
 		return
+	if (matchKey(msg.caption_html_urled, 
+			['mp.weixin.qq.com', 'telegra.ph']) 
 			and msg.chat.username == 'web_record'):
 		return
-	if (matchKey(msg.caption_html_urled, ['mp.weixin.qq.com', 
-			'telegra.ph', 'source</a>']) 
-			and msg.chat.username == 'web_record'):
-		return
+	soup = BeautifulSoup(msg.caption_html_urled, 'html.parser')
+	for item in soup.find_all('a'):
+		if 'http' in item.get('href'):
+			return item.get('href')
 
 def getResult(url, text):
-	# TODO: optimization based on url
-	if 'force_web' in text:
-		return web_2_album.get(url)
-	if 'force_weibo' in text:
-		return weibo_2_album.get(url)
-
 	ranks = [web_2_album]
-	if 'weibo' in url:
+	if 'weibo.' in url:
 		ranks = [weibo_2_album] + ranks
-	if matchKey(url, ['twitter', 't.co']):
+	if matchKey(url, ['twitter.', 't.co']):
 		ranks = [twitter_2_album] + ranks
-	if 't.me/' in url:
-		ranks = [post_2_album] + ranks
 	for method in ranks:
 		try:
 			candidate = method.get(url)
@@ -56,22 +48,19 @@ def toAlbum(update, context):
 	if update.edited_message or update.edited_channel_post:
 		return
 	msg = update.effective_message
-	if (matchKey(msg.caption_html_urled, ['mp.weixin.qq.com', 
-			'telegra.ph', 'source</a>']) 
-			and msg.chat.username == 'web_record'):
-		return
 	url = getUrl(msg)
+	if not url:
+		return
 	result = getResult(url, msg.text)
 	if not result:
 		return
 	rotate = 0
-	for x in msg.text.split():
-		if 'bot_rotate' in x:
-			try:
-				rotate = int(x.split('_')[-1])
-			except:
-				rotate = 180
-	r = None
+	if msg.text.split()[-1].startswith('r'):
+		try:
+			rotate = int(msg.text.split()[-1][1:])
+		except:
+			...
+	tmp_msg = None
 	try:
 		r = tele.bot.send_message(msg.chat_id, 'sending')
 		album_sender.send_v2(msg.chat, result, rotate = rotate)
