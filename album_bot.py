@@ -11,20 +11,23 @@ import twitter_2_album
 import post_2_album
 import album_sender
 from datetime import datetime
+from bs4 import beautifulSoup
 
 with open('CREDENTIALS') as f:
 	CREDENTIALS = yaml.load(f, Loader=yaml.FullLoader)
 tele = Updater(CREDENTIALS['bot_token'], use_context=True)
 
-debug_group = tele.bot.get_chat(-1001198682178)
+debug_group = tele.bot.get_chat(420074357)
 
 def getUrl(msg):
-	for item in msg.entities:
-		if (item["type"] == "url"):
-			url = msg.text[item["offset"]:][:item["length"]]
-			if not '://' in url:
-				url = "https://" + url
-			return url
+	if matchKey(msg.caption_html_urled, ['source</a>']):
+		return
+			and msg.chat.username == 'web_record'):
+		return
+	if (matchKey(msg.caption_html_urled, ['mp.weixin.qq.com', 
+			'telegra.ph', 'source</a>']) 
+			and msg.chat.username == 'web_record'):
+		return
 
 def getResult(url, text):
 	# TODO: optimization based on url
@@ -48,22 +51,16 @@ def getResult(url, text):
 		if not candidate.empty():
 			return candidate
 
-def log(*args):
-	text = ' '.join([str(x) for x in args])
-	with open('nohup.out', 'a') as f:
-		f.write('%d:%d %s\n' % (datetime.now().hour, datetime.now().minute, text))
-
 @log_on_fail(debug_group)
 def toAlbum(update, context):
 	if update.edited_message or update.edited_channel_post:
 		return
 	msg = update.effective_message
-	if (matchKey(msg.text_markdown, ['mp.weixin.qq.com', 
-			'telegra.ph', '[source]']) 
+	if (matchKey(msg.caption_html_urled, ['mp.weixin.qq.com', 
+			'telegra.ph', 'source</a>']) 
 			and msg.chat.username == 'web_record'):
 		return
 	url = getUrl(msg)
-	log('start', url)
 	result = getResult(url, msg.text)
 	if not result:
 		return
@@ -85,6 +82,5 @@ def toAlbum(update, context):
 
 if __name__ == "__main__":
 	tele.dispatcher.add_handler(MessageHandler(Filters.text & Filters.entity('url'), toAlbum))
-
 	tele.start_polling()
 	tele.idle()
