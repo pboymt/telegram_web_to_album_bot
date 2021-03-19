@@ -18,13 +18,13 @@ tele = Updater(CREDENTIALS['bot_token'], use_context=True)
 debug_group = tele.bot.get_chat(420074357)
 
 def getUrl(msg):
-	if matchKey(msg.caption_html_urled, ['source</a>']):
+	if matchKey(msg.text_html_urled, ['source</a>']):
 		return
-	if (matchKey(msg.caption_html_urled, 
+	if (matchKey(msg.text_html_urled, 
 			['mp.weixin.qq.com', 'telegra.ph']) 
 			and msg.chat.username == 'web_record'):
 		return
-	soup = BeautifulSoup(msg.caption_html_urled, 'html.parser')
+	soup = BeautifulSoup(msg.text_html_urled, 'html.parser')
 	for item in soup.find_all('a'):
 		if 'http' in item.get('href'):
 			return item.get('href')
@@ -61,13 +61,19 @@ def toAlbum(update, context):
 		except:
 			...
 	tmp_msg = None
+	error = None
 	try:
-		r = tele.bot.send_message(msg.chat_id, 'sending')
+		tmp_msg = tele.bot.send_message(msg.chat_id, 'sending')
 		album_sender.send_v2(msg.chat, result, rotate = rotate)
-	except Exception as e:
-		debug_group.send_message('%s failed with exception: %s' % (url, str(e)))
-	if r:
-		r.delete()
+	except Exception as error:
+		...
+	if error:
+		error = ' error: ' + str(error)
+	debug_group.send_message('id: %d chat: %s%s content: %s' % (
+		msg.chat.id, getDisplayChatHtml(msg.chat), error, msg.text_html_urled), 
+		parse_mode='html')
+	if tmp_msg:
+		tmp_msg.delete()
 
 if __name__ == "__main__":
 	tele.dispatcher.add_handler(MessageHandler(Filters.text & Filters.entity('url'), toAlbum))
