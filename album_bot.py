@@ -61,19 +61,22 @@ def toAlbum(update, context):
 		except:
 			...
 	tmp_msg = None
-	error = None
+	error = ''
 	try:
 		tmp_msg = tele.bot.send_message(msg.chat_id, 'sending')
 		album_sender.send_v2(msg.chat, result, rotate = rotate)
-	except Exception as error:
-		...
+	except Exception as e:
+		error = e
 	if error:
 		error = ' error: ' + str(error)
 	debug_group.send_message('id: %d chat: %s%s content: %s' % (
 		msg.chat.id, getDisplayChatHtml(msg.chat), error, msg.text_html_urled), 
-		parse_mode='html')
+		parse_mode='html', disable_web_page_preview=True)
 	if tmp_msg:
-		tmp_msg.delete()
+		try:
+			tmp_msg.delete()
+		except:
+			...
 
 if __name__ == "__main__":
 	tele.dispatcher.add_handler(MessageHandler(Filters.text & Filters.entity('url'), toAlbum))
