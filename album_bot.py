@@ -16,6 +16,7 @@ with open('CREDENTIALS') as f:
 tele = Updater(CREDENTIALS['bot_token'], use_context=True)
 
 debug_group = tele.bot.get_chat(420074357)
+info_log = tele.bot.get_chat(-1001198682178)
 
 def getUrl(msg):
 	if matchKey(msg.text_html_urled, ['source</a>']):
@@ -41,6 +42,7 @@ def getResult(url, text):
 		except:
 			continue
 		if not candidate.empty():
+			print('use method: ' + str(method))
 			return candidate
 
 @log_on_fail(debug_group)
@@ -67,12 +69,10 @@ def toAlbum(update, context):
 		tmp_msg = tele.bot.send_message(msg.chat_id, 'sending')
 		final_result = album_sender.send_v2(msg.chat, result, rotate = rotate)[0]
 	except Exception as e:
-		error = e
-	if error:
-		error = ' error: ' + str(error)
+		error = ' error: ' + str(e)
 	if final_result:
-		final_result = ' result: ' + final_result.cap_html_urled
-	debug_group.send_message(getBasicLog(msg) + error + final_result, 
+		final_result = ' result: ' + final_result.caption_html_urled
+	info_log.send_message(getBasicLog(msg) + error + final_result, 
 		parse_mode='html', disable_web_page_preview=True)
 	if tmp_msg:
 		try:
