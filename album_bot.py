@@ -4,7 +4,7 @@
 from telegram.ext import Updater, MessageHandler, Filters
 
 import yaml
-from telegram_util import log_on_fail, matchKey, getDisplayChatHtml
+from telegram_util import log_on_fail, matchKey, getBasicLog
 import web_2_album
 import weibo_2_album
 import twitter_2_album
@@ -62,15 +62,17 @@ def toAlbum(update, context):
 			...
 	tmp_msg = None
 	error = ''
+	final_result = ''
 	try:
 		tmp_msg = tele.bot.send_message(msg.chat_id, 'sending')
-		album_sender.send_v2(msg.chat, result, rotate = rotate)
+		final_result = album_sender.send_v2(msg.chat, result, rotate = rotate)[0]
 	except Exception as e:
 		error = e
 	if error:
 		error = ' error: ' + str(error)
-	debug_group.send_message('id: %d chat: %s%s content: %s' % (
-		msg.chat.id, getDisplayChatHtml(msg.chat), error, msg.text_html_urled), 
+	if final_result:
+		final_result = ' result: ' + final_result.cap_html_urled
+	debug_group.send_message(getBasicLog(msg) + error + final_result, 
 		parse_mode='html', disable_web_page_preview=True)
 	if tmp_msg:
 		try:
