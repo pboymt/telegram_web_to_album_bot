@@ -42,7 +42,6 @@ def getResult(url, text):
 		except:
 			continue
 		if not candidate.empty():
-			print('use method: ' + str(method))
 			return candidate
 
 @log_on_fail(debug_group)
@@ -71,7 +70,9 @@ def toAlbum(update, context):
 	except Exception as e:
 		error = ' error: ' + str(e)
 	if final_result:
-		final_result = ' result: ' + final_result.caption_html_urled
+		final_result = final_result.text_html_urled or final_result.caption_html_urled
+		if final_result:
+			final_result = ' result: ' + final_result
 	info_log.send_message(getBasicLog(msg) + error + final_result, 
 		parse_mode='html', disable_web_page_preview=True)
 	if tmp_msg:
