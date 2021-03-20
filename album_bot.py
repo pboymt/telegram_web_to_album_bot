@@ -4,7 +4,7 @@
 from telegram.ext import Updater, MessageHandler, Filters
 
 import yaml
-from telegram_util import log_on_fail, matchKey, getBasicLog
+from telegram_util import log_on_fail, matchKey, getBasicLog, getOrigins
 import web_2_album
 import weibo_2_album
 import twitter_2_album
@@ -30,7 +30,7 @@ def getUrl(msg):
 		if 'http' in item.get('href'):
 			return item.get('href')
 
-def getResult(url, text):
+def getResult(url, text, origin):
 	ranks = [web_2_album]
 	if 'weibo.' in url:
 		ranks = [weibo_2_album] + ranks
@@ -38,7 +38,10 @@ def getResult(url, text):
 		ranks = [twitter_2_album] + ranks
 	for method in ranks:
 		try:
-			candidate = method.get(url)
+			if method == twitter_2_album:
+				candidate = method.get(url, origin = origin)
+			else:
+				candidate = method.get(url)
 		except:
 			continue
 		if not candidate.empty():
@@ -52,7 +55,7 @@ def toAlbum(update, context):
 	url = getUrl(msg)
 	if not url:
 		return
-	result = getResult(url, msg.text)
+	result = getResult(url, msg.text, getOrigins(msg))
 	if not result:
 		return
 	rotate = 0
