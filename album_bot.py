@@ -10,6 +10,7 @@ import weibo_2_album
 import twitter_2_album
 import album_sender
 from bs4 import BeautifulSoup
+import plain_db
 
 with open('CREDENTIALS') as f:
 	CREDENTIALS = yaml.load(f, Loader=yaml.FullLoader)
@@ -17,6 +18,7 @@ tele = Updater(CREDENTIALS['bot_token'], use_context=True)
 
 debug_group = tele.bot.get_chat(420074357)
 info_log = tele.bot.get_chat(-1001198682178)
+remove_origin = plain_db.loadKeyOnlyDB('remove_origin')
 
 def getUrl(msg):
 	if matchKey(msg.text_html_urled, ['source</a>']):
@@ -84,7 +86,21 @@ def toAlbum(update, context):
 		except:
 			...
 
+def toggleRemoveOrigin(msg):
+	result = remove_origin.toggle(msg.chat_id)
+	if result:
+		msg.reply_text('Remove Original message On')
+	else:
+		msg.reply_text('Remove Original message Off')
+
+@log_on_fail(debug_group)
+def command(update, context):
+	msg = update.message or update.channel_post
+	if matchKey(msg.text, ['origin', 'trmo', 'toggle_remove_origin']):
+		return toggleRemoveOrigin(msg)
+
 if __name__ == "__main__":
 	tele.dispatcher.add_handler(MessageHandler(Filters.text & Filters.entity('url'), toAlbum))
+	tele.dispatcher.add_handler(MessageHandler(Filters.command, command))
 	tele.start_polling()
 	tele.idle()
