@@ -4,7 +4,7 @@
 from telegram.ext import Updater, MessageHandler, Filters
 
 import yaml
-from telegram_util import log_on_fail, matchKey, getBasicLog, getOrigins
+from telegram_util import log_on_fail, matchKey, getBasicLog, getOrigins, tryDelete
 import web_2_album
 import weibo_2_album
 import twitter_2_album
@@ -72,6 +72,8 @@ def toAlbum(update, context):
 	try:
 		tmp_msg = tele.bot.send_message(msg.chat_id, 'sending')
 		final_result = album_sender.send_v2(msg.chat, result, rotate = rotate)[0]
+		if final_result and str(msg.chat_id) in remove_origin._db.items:
+			tryDelete(msg)
 	except Exception as e:
 		error = ' error: ' + str(e)
 	if final_result:
