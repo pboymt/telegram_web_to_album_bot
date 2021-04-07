@@ -17,7 +17,7 @@ with open('CREDENTIALS') as f:
 tele = Updater(CREDENTIALS['bot_token'], use_context=True)
 
 debug_group = tele.bot.get_chat(420074357)
-info_log = tele.bot.get_chat(-1001198682178)
+info_log = tele.bot.get_chat(-1001439828294)
 remove_origin = plain_db.loadKeyOnlyDB('remove_origin')
 
 def getUrl(msg):
