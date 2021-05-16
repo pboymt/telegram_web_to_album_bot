@@ -69,9 +69,10 @@ def toAlbum(update, context):
 	tmp_msg = None
 	error = ''
 	final_result = ''
+	send_all = (msg.chat_id == -1001367414473)
 	try:
 		tmp_msg = tele.bot.send_message(msg.chat_id, 'sending')
-		final_result = album_sender.send_v2(msg.chat, result, rotate = rotate)[0]
+		final_result = album_sender.send_v2(msg.chat, result, rotate = rotate, send_all=send_all)[0]
 		if final_result and str(msg.chat_id) in remove_origin._db.items:
 			tryDelete(msg)
 	except Exception as e:
