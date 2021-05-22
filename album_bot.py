@@ -50,7 +50,7 @@ def getResult(url, text, origin):
 			return candidate
 
 @log_on_fail(debug_group)
-def toAlbum(update, context):
+def toAlbumInternal(update, context):
 	if update.edited_message or update.edited_channel_post:
 		return
 	msg = update.effective_message
@@ -88,6 +88,10 @@ def toAlbum(update, context):
 			tmp_msg.delete()
 		except:
 			...
+
+@log_on_fail(debug_group)
+def toAlbum(update, context):
+	threading.Thread(target=toAlbumInternal, args=(update, context)).start()
 
 def toggleRemoveOrigin(msg):
 	result = remove_origin.toggle(msg.chat_id)
