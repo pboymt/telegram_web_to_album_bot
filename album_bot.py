@@ -11,6 +11,7 @@ import twitter_2_album
 import album_sender
 from bs4 import BeautifulSoup
 import plain_db
+import threading
 
 with open('CREDENTIALS') as f:
 	CREDENTIALS = yaml.load(f, Loader=yaml.FullLoader)
