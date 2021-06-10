@@ -61,7 +61,7 @@ def toAlbumInternal(update, context):
 	result = getResult(url, msg.text, getOrigins(msg))
 	if not result:
 		return
-	if msg.text.endswith(' t'):
+	if msg.text.endswith(' t'): # text only
 		result.imgs = []
 	rotate = 0
 	if msg.text.split()[-1].startswith('r'):
