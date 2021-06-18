@@ -19,6 +19,7 @@ tele = Updater(CREDENTIALS['bot_token'], use_context=True)
 
 debug_group = tele.bot.get_chat(420074357)
 info_log = tele.bot.get_chat(-1001439828294)
+waitlist_log = tele.bot.get_chat(-1001345995889)
 remove_origin = plain_db.loadKeyOnlyDB('remove_origin')
 
 def getUrl(msg):
@@ -74,10 +75,14 @@ def toAlbumInternal(update, context):
 	final_result = ''
 	send_all = (msg.chat_id == -1001367414473)
 	try:
-		tmp_msg = tele.bot.send_message(msg.chat_id, 'sending')
+		if str(msg.chat_id) in remove_origin._db.items:
+			tryDelete(msg)
+			waitlist_msg = waitlist_log.send_message(msg.text)
+		else:
+			tmp_msg = tele.bot.send_message(msg.chat_id, 'sending')
 		final_result = album_sender.send_v2(msg.chat, result, rotate = rotate, send_all=send_all)[0]
 		if final_result and str(msg.chat_id) in remove_origin._db.items:
-			tryDelete(msg)
+			tryDelete(waitlist_msg)
 	except Exception as e:
 		error = ' error: ' + str(e)
 	if final_result:
@@ -87,10 +92,7 @@ def toAlbumInternal(update, context):
 	info_log.send_message(getBasicLog(msg) + error + final_result, 
 		parse_mode='html', disable_web_page_preview=True)
 	if tmp_msg:
-		try:
-			tmp_msg.delete()
-		except:
-			...
+		tryDelete(tmp_msg)
 
 @log_on_fail(debug_group)
 def toAlbum(update, context):
