@@ -64,6 +64,7 @@ def toAlbumInternal(update, context):
 		return
 	if msg.text.endswith(' t'): # text only
 		result.imgs = []
+		result.video = ''
 	rotate = 0
 	if msg.text.split()[-1].startswith('r'):
 		try:
