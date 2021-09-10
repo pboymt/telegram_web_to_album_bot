@@ -12,6 +12,7 @@ import album_sender
 from bs4 import BeautifulSoup
 import plain_db
 import threading
+import cached_url
 
 with open('CREDENTIALS') as f:
 	CREDENTIALS = yaml.load(f, Loader=yaml.FullLoader)
@@ -44,6 +45,9 @@ def getResult(url, text, origin):
 		try:
 			if method == twitter_2_album:
 				candidate = method.get(url, origin = origin)
+			elif method == web_2_album and 'douban.' in url:
+				candidate = method.get(url, content = cached_url.get(url, 
+					{'cookie': CREDENTIALS['douban_cookie']}, force_cache=True))
 			else:
 				candidate = method.get(url)
 		except:
