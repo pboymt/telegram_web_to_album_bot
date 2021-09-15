@@ -47,7 +47,7 @@ def getResult(url, text, origin):
 				candidate = method.get(url, origin = origin)
 			elif method == web_2_album and 'douban.' in url:
 				candidate = method.get(url, content = cached_url.get(url, 
-					# {'cookie': CREDENTIALS.get('douban_cookie')}, 
+					{'cookie': CREDENTIALS.get('douban_cookie')}, 
 					force_cache=True))
 			else:
 				candidate = method.get(url)
