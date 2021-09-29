@@ -76,6 +76,12 @@ def toAlbumInternal(update, context):
 			rotate = int(msg.text.split()[-1][1:])
 		except:
 			...
+	size_factor = None
+	if msg.text.split()[-1].startswith('s'):
+		try:
+			size_factor = float(msg.text.split()[-1][1:])
+		except:
+			...
 	tmp_msg = None
 	error = ''
 	final_result = ''
@@ -86,7 +92,7 @@ def toAlbumInternal(update, context):
 			waitlist_msg = waitlist_log.send_message(msg.text)
 		else:
 			tmp_msg = tele.bot.send_message(msg.chat_id, 'sending')
-		final_result = album_sender.send_v2(msg.chat, result, rotate = rotate, send_all=send_all)[0]
+		final_result = album_sender.send_v2(msg.chat, result, rotate = rotate, send_all=send_all, size_factor=size_factor)[0]
 		if final_result and str(msg.chat_id) in remove_origin._db.items:
 			tryDelete(waitlist_msg)
 	except Exception as e:
