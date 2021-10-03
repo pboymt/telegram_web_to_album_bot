@@ -64,12 +64,9 @@ def toAlbumInternal(update, context):
 	url = getUrl(msg)
 	if not url:
 		return
-	print('toAlbumInternal', url)
 	result = getResult(url, msg.text, getOrigins(msg))
 	if not result:
-		print('toAlbumInternal no result')
 		return
-	print('toAlbumInternal result', url, result)
 	if msg.text.endswith(' t'): # text only
 		result.imgs = []
 		result.video = ''
@@ -112,10 +109,6 @@ def toAlbumInternal(update, context):
 @log_on_fail(debug_group)
 def toAlbum(update, context):
 	threading.Thread(target=toAlbumInternal, args=(update, context)).start()
-	try:
-		print('toAlbum', update.effective_message.text)
-	except:
-		...
 
 def toggleRemoveOrigin(msg):
 	result = remove_origin.toggle(msg.chat_id)
