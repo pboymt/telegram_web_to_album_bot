@@ -8,9 +8,9 @@ with open('CREDENTIALS') as f:
 	CREDENTIALS = yaml.load(f, Loader=yaml.FullLoader)
 
 def test(url):
-	print({'cookie': CREDENTIALS.get('douban_cookie')})
 	cached_url.get(url, 
-					{'cookie': CREDENTIALS.get('douban_cookie')}, 
+					{'cookie': CREDENTIALS.get('douban_cookie'),
+					'host': 'www.douban.com'}, 
 					force_cache=True)
 	# result = album_bot.getResult(url, '', origin=[])
 	# if not result:
