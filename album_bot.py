@@ -49,7 +49,7 @@ def getResult(url, text, origin):
 				candidate = method.get(url, content = cached_url.get(url, 
 					{'cookie': CREDENTIALS.get('douban_cookie')}, 
 					force_cache=True))
-				print(candidate)
+				candidate.url = candidate.url.split('/#')[0]
 			else:
 				candidate = method.get(url)
 		except:
