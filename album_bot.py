@@ -50,6 +50,7 @@ def getResult(url, text, origin):
 					{'cookie': CREDENTIALS.get('douban_cookie')}, 
 					force_cache=True))
 				candidate.url = candidate.url.split('/#')[0]
+				candidate.url = candidate.url.split('/?')[0]
 			else:
 				candidate = method.get(url)
 		except:
