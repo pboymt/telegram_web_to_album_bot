@@ -24,6 +24,7 @@ waitlist_log = tele.bot.get_chat(-1001345995889)
 remove_origin = plain_db.loadKeyOnlyDB('remove_origin')
 
 def getUrl(msg):
+	print(msg)
 	if matchKey(msg.text_html_urled, ['source</a>']):
 		return
 	if (matchKey(msg.text_html_urled, 
