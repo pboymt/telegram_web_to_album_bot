@@ -23,8 +23,14 @@ info_log = tele.bot.get_chat(-1001439828294)
 waitlist_log = tele.bot.get_chat(-1001345995889)
 remove_origin = plain_db.loadKeyOnlyDB('remove_origin')
 
+def getUrlFromInfoLog(msg):
+	if "'title': '[info_log]" not in str(msg):
+		return 
+	
+
 def getUrl(msg):
-	print(msg)
+	if getUrlFromInfoLog(msg):
+		return getUrlFromInfoLog(msg)
 	if matchKey(msg.text_html_urled, ['source</a>']):
 		return
 	if (matchKey(msg.text_html_urled, 
