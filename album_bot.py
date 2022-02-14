@@ -24,7 +24,7 @@ waitlist_log = tele.bot.get_chat(-1001345995889)
 remove_origin = plain_db.loadKeyOnlyDB('remove_origin')
 
 def getUrlFromInfoLog(msg):
-	if "'title': '[info_log]" not in str(msg):
+	if not matchKey(str(msg), ['-1001316672281', "'title': '[info_log]"]):
 		return 
 	soup = BeautifulSoup(msg.text_html_urled, 'html.parser')
 	for item in soup.find_all('a'):
