@@ -26,7 +26,13 @@ remove_origin = plain_db.loadKeyOnlyDB('remove_origin')
 def getUrlFromInfoLog(msg):
 	if "'title': '[info_log]" not in str(msg):
 		return 
-	
+	soup = BeautifulSoup(msg.text_html_urled, 'html.parser')
+	for item in soup.find_all('a'):
+		if 'www.douban.com/group/topic' in item.get('href'):
+			return 'https://' + item.get('href')
+	for item in list(soup.find_all('a'))[::-1]:
+		if 'http' in item.get('href'):
+			return item.get('href')
 
 def getUrl(msg):
 	if getUrlFromInfoLog(msg):
