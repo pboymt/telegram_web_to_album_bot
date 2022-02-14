@@ -104,7 +104,7 @@ def toAlbumInternal(update, context):
 	try:
 		if str(msg.chat_id) in remove_origin._db.items:
 			tryDelete(msg)
-			waitlist_msg = waitlist_log.send_message(msg.text)
+			waitlist_msg = waitlist_log.send_message(msg.text, disable_web_page_preview=True)
 		else:
 			tmp_msg = tele.bot.send_message(msg.chat_id, 'sending')
 		final_result = album_sender.send_v2(msg.chat, result, rotate = rotate, send_all=send_all, size_factor=size_factor)[0]
