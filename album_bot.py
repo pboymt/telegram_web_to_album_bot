@@ -135,6 +135,8 @@ def toggleRemoveOrigin(msg):
 @log_on_fail(debug_group)
 def command(update, context):
 	msg = update.message or update.channel_post
+	if not msg.text:
+		return
 	if matchKey(msg.text, ['origin', 'trmo', 'toggle_remove_origin']):
 		return toggleRemoveOrigin(msg)
 
