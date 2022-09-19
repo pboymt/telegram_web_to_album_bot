@@ -58,6 +58,7 @@ def getResult(url, text, origin):
 		try:
 			if method == twitter_2_album:
 				candidate = method.get(url, origin = origin)
+				candidate.url = candidate.url.split('?')[0]
 			elif method == web_2_album and 'douban.' in url:
 				candidate = method.get(url, content = cached_url.get(url, 
 					{'cookie': CREDENTIALS.get('douban_cookie')}, 
