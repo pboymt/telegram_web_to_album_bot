@@ -8,6 +8,7 @@ from telegram_util import log_on_fail, matchKey, getBasicLog, getOrigins, tryDel
 import web_2_album
 import weibo_2_album
 import twitter_2_album
+import reddit_2_album
 import album_sender
 from bs4 import BeautifulSoup
 import plain_db
@@ -54,6 +55,8 @@ def getResult(url, text, origin):
 		ranks = [weibo_2_album] + ranks
 	if matchKey(url, ['twitter.', 't.co']):
 		ranks = [twitter_2_album] + ranks
+	if '.reddit.' in url:
+		ranks = [reddit_2_album] + ranks
 	for method in ranks:
 		try:
 			if method == twitter_2_album:
