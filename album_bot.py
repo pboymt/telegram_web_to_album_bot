@@ -68,6 +68,9 @@ def getResult(url, text, origin):
 					force_cache=True))
 				candidate.url = candidate.url.split('/#')[0]
 				candidate.url = candidate.url.split('/?')[0]
+			elif method == reddit_2_album:
+				candidate = method.get(url)
+				candidate.url = candidate.url.split('/?')[0]
 			else:
 				candidate = method.get(url)
 		except:
