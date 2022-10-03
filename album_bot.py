@@ -92,7 +92,9 @@ def toAlbumInternal(update, context):
 	if msg.text.endswith(' t'): # text only
 		result.imgs = []
 		result.video = ''
-	rotate = 0
+	rotate = getRotate(msg.text)
+	size_factor = getSizeFactor(msg.text)
+	page = getPage(msg.text)
 	if msg.text.split()[-1].startswith('r'):
 		try:
 			rotate = int(msg.text.split()[-1][1:])
@@ -102,6 +104,12 @@ def toAlbumInternal(update, context):
 	if msg.text.split()[-1].startswith('s'):
 		try:
 			size_factor = float(msg.text.split()[-1][1:])
+		except:
+			...
+	page = 0
+	if msg.text.split()[-1].startswith('p'):
+		try:
+			page = int(msg.text.split()[-1][1:])
 		except:
 			...
 	tmp_msg = None
