@@ -78,6 +78,16 @@ def getResult(url, text, origin):
 		if not candidate.empty():
 			return candidate
 
+def getParam(text, key, func, default):
+	for item in text.split():
+		if item.startswith(key):
+			try:
+				return func(item[1:])
+			except:
+				...
+	return default
+
+
 @log_on_fail(debug_group)
 def toAlbumInternal(update, context):
 	if update.edited_message or update.edited_channel_post:
@@ -92,26 +102,9 @@ def toAlbumInternal(update, context):
 	if msg.text.endswith(' t'): # text only
 		result.imgs = []
 		result.video = ''
-	rotate = getRotate(msg.text)
-	size_factor = getSizeFactor(msg.text)
-	page = getPage(msg.text)
-	if msg.text.split()[-1].startswith('r'):
-		try:
-			rotate = int(msg.text.split()[-1][1:])
-		except:
-			...
-	size_factor = None
-	if msg.text.split()[-1].startswith('s'):
-		try:
-			size_factor = float(msg.text.split()[-1][1:])
-		except:
-			...
-	page = 0
-	if msg.text.split()[-1].startswith('p'):
-		try:
-			page = int(msg.text.split()[-1][1:])
-		except:
-			...
+	rotate = getParam(msg.text, 'r', int, 0)
+	size_factor = getParam(msg.text, 's', float, None)
+	page = getParam(msg.text, 'p', int, 0)
 	tmp_msg = None
 	error = ''
 	final_result = ''
@@ -122,7 +115,7 @@ def toAlbumInternal(update, context):
 			waitlist_msg = waitlist_log.send_message(msg.text, disable_web_page_preview=True)
 		else:
 			tmp_msg = tele.bot.send_message(msg.chat_id, 'sending')
-		final_result = album_sender.send_v2(msg.chat, result, rotate = rotate, send_all=send_all, size_factor=size_factor)[0]
+		final_result = album_sender.send_v2(msg.chat, result, rotate = rotate, send_all=send_all, size_factor=size_factor, start_page=page)[0]
 		if final_result and str(msg.chat_id) in remove_origin._db.items:
 			tryDelete(waitlist_msg)
 	except Exception as e:
